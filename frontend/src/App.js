@@ -1,27 +1,15 @@
-import Trix from "trix";
-import React, { useState } from "react";
-import { ReactTrixRTEInput } from "react-trix-rte";
+import React, {useState, useEffect} from "react";
+import DocsList from "./components/docslist";
 
-export default function TrixEditor(props) {
-  const [value, setValue] = useState("");
-
-  function handleChange(event, newValue) {
-    setValue(newValue);
-  }
-
-  function handleSave(event) {
-    console.log(value);
-  }
-
+export default function App() {
   return (
-    <>
-      <div style={{backgroundColor: "lightblue", padding: "2em"}}>
-        <button style={{margin: "0 auto", display: "block", padding: "1em" }} onClick={handleSave}>💾 Save!</button>
-      </div>
-      <ReactTrixRTEInput
-        defaultValue="Enter some text!"
-        onChange={handleChange}
-      />
-    </>
+    <div className="App">
+      <header className="header">
+        <h1>TheEditor</h1>
+      </header>
+      <main>
+        <DocsList />
+      </main>
+    </div>
   )
 }
