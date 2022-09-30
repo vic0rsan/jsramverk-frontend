@@ -1,15 +1,15 @@
 const docsModel = {
     getAllDocs: async function getAllDocs() {
-        const response = await fetch("https://jsramverk-editor-gusu20.azurewebsites.net/docs/list");
+        const response = await fetch("https://jsramverk-editor-gusu20.azurewebsites.net/docs");
         const result = await response.json();
 
-        return result;
+        return result.data;
     },
     getOneDoc: async function getOneDoc(id) {
         const response = await fetch(`https://jsramverk-editor-gusu20.azurewebsites.net/docs/seldoc/${id}`);
         const result = await response.json();
 
-        return result;
+        return result.data;
     },
     createCurrentDoc: async function createCurrentDoc(value) {
         let titlestr = value.replace( /(<([^>]+)>)/ig, '');
