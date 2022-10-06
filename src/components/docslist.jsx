@@ -4,27 +4,15 @@ import TheEditor from "./editor";
 
 export default function DocsList() {
     const [docs, setDocs] = useState([]);
-    const [currentDoc, setCurrentDoc] = useState("");
+    const [currentDoc, setCurrentDoc] = useState({_id: null, title:"Untitled", body:""});
 
     async function fetchDoc(e) {
         const id = e.target.value.toString();
         if (e.target.value !== "-99") {
             const doc = await docsModel.getOneDoc(id);
             setCurrentDoc(doc);
-            setEditorContent(doc.body);
-        } else {
-            setCurrentDoc({_id: null, title:"Untitled", body:" "});
-            setEditorContent("");
-        } 
+        }
     }
-
-    function setEditorContent(content) {
-        let element = document.querySelector("trix-editor");
-  
-        element.value = "";
-        element.editor.setSelectedRange([0, 0]);
-        element.editor.insertHTML(content);
-    } 
 
     useEffect(() => {
       (async () => {
@@ -39,7 +27,7 @@ export default function DocsList() {
                 <option value="-99" key="0">*New Document*</option>
                 {docs.map((doc, index) => <option value={doc._id} key={index}>{doc.title}</option>)}
             </select>
-            <TheEditor doc={currentDoc}/>
+            <TheEditor doc={currentDoc} />
         </>
     )
 }
