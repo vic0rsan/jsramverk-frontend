@@ -8,13 +8,13 @@ import { io } from "socket.io-client";
 export default function TheEditor({doc}) {
     const [value, setValue] = useState("");
     const [socket, setSocket] = useState(null);
+    const [email, setEmail] = useState(null);
 
     function handleChange(html, text) {
         setValue(text);
     }
 
     function handleSave(event) {
-        console.log(doc._id);
         if (doc._id) {
             docsModel.saveCurrentDoc(doc._id, value);
         } else {
@@ -25,12 +25,15 @@ export default function TheEditor({doc}) {
     function setEditorContent(content, trigger) {
         let element = document.querySelector("trix-editor");
     
- 
         element.value = "";
         element.editor.setSelectedRange([0, 0]);
-        
         element.editor.insertHTML(content);
     } 
+
+    function shareDocument() {
+        docsModel.addUserToDoc(doc._id, email);
+        console.log(email);
+    }
 
     useEffect(() => {
         setSocket(io("https://jsramverk-editor-gusu20.azurewebsites.net/"));
@@ -57,10 +60,17 @@ export default function TheEditor({doc}) {
     return (
         <>
             <div style={{backgroundColor: "lightblue", padding: "2em"}}>
-                <button style={{margin: "0 auto", display: "block", padding: "1em" }} onClick={handleSave}>💾 Save!</button>
+                <div style={{textAlign: "center"}}>
+                    <button style={{padding: "1em"}} onClick={handleSave}>💾 Save!</button>
+                </div>  
             </div>
             <div onKeyUp={() => {socket.emit("doc", {_id: doc._id, body: value})}}>
                 <TrixEditor autoFocus={true} onChange={handleChange} />
+            </div>
+            <div style={{marginTop: "1em"}}>
+                <label htmlFor="email">Share document to user (email): </label>
+                <input onChange={(e) => setEmail(e.target.value)} type="email" id="email" name="email" />
+                <button onClick={() => shareDocument()}>🤝 Share!</button>
             </div>
         </>
     )

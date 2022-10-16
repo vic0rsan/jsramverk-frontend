@@ -11,12 +11,14 @@ export default function DocsList() {
         if (e.target.value !== "-99") {
             const doc = await docsModel.getOneDoc(id);
             setCurrentDoc(doc);
+        } else {
+            setCurrentDoc({_id: null, title:"Untitled", body:""});
         }
     }
 
     useEffect(() => {
       (async () => {
-        const allDocs = await docsModel.getAllDocs();
+        const allDocs = await docsModel.getUserDocs();
         setDocs(allDocs);
       })();
     }, [currentDoc]);

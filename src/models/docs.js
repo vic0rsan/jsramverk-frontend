@@ -1,12 +1,24 @@
+import { apiUrl } from "../config";
+
 const docsModel = {
-    getAllDocs: async function getAllDocs() {
-        const response = await fetch("https://jsramverk-editor-gusu20.azurewebsites.net/docs");
+    getUserDocs: async function getUserDocs() {
+        const response = await fetch(`${apiUrl}/docs`, {
+            method: 'GET',
+            headers: {
+            'x-access-token': sessionStorage.getItem("token")
+        }
+    });
         const result = await response.json();
 
         return result.data;
     },
     getOneDoc: async function getOneDoc(id) {
-        const response = await fetch(`https://jsramverk-editor-gusu20.azurewebsites.net/docs/seldoc/${id}`);
+        const response = await fetch(`${apiUrl}/docs/seldoc/${id}`, {
+            method: 'GET',
+            headers: {
+            'x-access-token': sessionStorage.getItem("token")
+            }
+        });
         const result = await response.json();
 
         return result.data;
@@ -14,28 +26,44 @@ const docsModel = {
     createCurrentDoc: async function createCurrentDoc(value) {
         let titlestr = value.replace( /(<([^>]+)>)/ig, '');
         let title = titlestr.split(' ').slice(0, 5).join(' '); //Get the first five words from the text as the title.
-        await fetch("https://jsramverk-editor-gusu20.azurewebsites.net/docs/create", {
+        await fetch(`${apiUrl}/docs/create`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-access-token': sessionStorage.getItem("token")
               },
             body: JSON.stringify({
                 title: title,
-                body: value
+                body: value,
             })
         });
     },
     saveCurrentDoc: async function saveCurrentDoc(id, body) {
-        await fetch("https://jsramverk-editor-gusu20.azurewebsites.net/docs/update", {
+        await fetch(`${apiUrl}/docs/update`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-access-token': sessionStorage.getItem("token")
               },
             body: JSON.stringify({
                 id: id,
                 body: body
+            })
+        }); 
+    },
+    addUserToDoc: async function addUserToDoc(id, email) {
+        await fetch(`${apiUrl}/docs/addusertodoc`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': sessionStorage.getItem("token")
+              },
+            body: JSON.stringify({
+                id: id,
+                email: email
             })
         }); 
     }
