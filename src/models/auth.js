@@ -15,6 +15,7 @@ const auth = {
           }).then(response => response.json())
           .then(res => {
             sessionStorage.setItem("token", res.data.token);
+            sessionStorage.setItem("user", res.data.email);
             window.location.reload();
           });
     },

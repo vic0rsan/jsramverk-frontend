@@ -1,5 +1,5 @@
 import React from "react";
-import DocsList from "./components/docslist";
+import Docs from "./components/docs";
 import Login from "./components/login";
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
       </header>
       <main className="main">
         { sessionStorage.getItem("token") ?
-          <DocsList />
+          <Docs />
             :
           <Login />
         }

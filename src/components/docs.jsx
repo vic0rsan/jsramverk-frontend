@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import docsModel from "../models/docs"
+import docsModel from "../models/docs";
+import graphModel from "../models/graph";
 import TheEditor from "./editor";
 
-export default function DocsList() {
+export default function Docs() {
     const [docs, setDocs] = useState([]);
     const [currentDoc, setCurrentDoc] = useState({_id: null, title:"Untitled", body:""});
 
@@ -18,7 +19,7 @@ export default function DocsList() {
 
     useEffect(() => {
       (async () => {
-        const allDocs = await docsModel.getUserDocs();
+        const allDocs = await graphModel.graphUserDocs();
         setDocs(allDocs);
       })();
     }, [currentDoc]);
