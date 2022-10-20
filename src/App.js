@@ -1,20 +1,17 @@
 import React from "react";
-import Docs from "./components/docs";
-import Login from "./components/login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./components/auth";
+
+import Invite from "./components/invite";
+
 
 export default function App() {
   return (
-    <div className="App">
-      <header className="header">
-        <h1>TheEditor</h1>
-      </header>
-      <main className="main">
-        { sessionStorage.getItem("token") ?
-          <Docs />
-            :
-          <Login />
-        }
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/invite" element={<Invite />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

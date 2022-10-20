@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TrixEditor } from "react-trix";
 import docsModel from "../models/docs";
+import textToPdf from "../models/pdf";
 import "trix";
 import "react-trix-rte";
 import { io } from "socket.io-client";
@@ -11,7 +12,7 @@ export default function TheEditor({doc}) {
     const [email, setEmail] = useState(null);
 
     function handleChange(html, text) {
-        setValue(text);
+        setValue(html);
     }
 
     function handleSave(event) {
@@ -20,6 +21,10 @@ export default function TheEditor({doc}) {
         } else {
             docsModel.createCurrentDoc(value)
         }
+    }
+
+    function handlePdf(event) {
+        textToPdf(value);
     }
 
     function setEditorContent(content, trigger) {
@@ -62,6 +67,7 @@ export default function TheEditor({doc}) {
             <div style={{backgroundColor: "lightblue", padding: "2em"}}>
                 <div style={{textAlign: "center"}}>
                     <button style={{padding: "1em"}} onClick={handleSave}>💾 Save!</button>
+                    <button style={{padding: "1em"}} onClick={handlePdf}>🖨️ Print!</button>
                 </div>  
             </div>
             <div onKeyUp={() => {socket.emit("doc", {_id: doc._id, body: value})}}>
