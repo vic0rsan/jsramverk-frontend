@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TrixEditor } from "react-trix";
+import { apiUrl } from "../config";
 import docsModel from "../models/docs";
 import textToPdf from "../models/pdf";
+import mailModel from "../models/mail";
 import "trix";
 import "react-trix-rte";
 import { io } from "socket.io-client";
@@ -36,12 +38,11 @@ export default function TheEditor({doc}) {
     } 
 
     function shareDocument() {
-        docsModel.addUserToDoc(doc._id, email);
-        console.log(email);
+        mailModel.sendMail(doc._id, doc.title, email);
     }
 
     useEffect(() => {
-        setSocket(io("https://jsramverk-editor-gusu20.azurewebsites.net/"));
+        setSocket(io(apiUrl));
         return () => {
             if (socket) {
                 socket.disconnect();
@@ -76,7 +77,7 @@ export default function TheEditor({doc}) {
             <div style={{marginTop: "1em"}}>
                 <label htmlFor="email">Share document to user (email): </label>
                 <input onChange={(e) => setEmail(e.target.value)} type="email" id="email" name="email" />
-                <button onClick={() => shareDocument()}>🤝 Share!</button>
+                <button onClick={shareDocument}>🤝 Share!</button>
             </div>
         </>
     )
