@@ -1,7 +1,7 @@
 import { apiUrl } from "../config";
 
 const graphModel = {
-    graphUserDocs: async function graphUserDocs() {
+    graphUserDocs: async function graphUserDocs(code = false) {
         const email = sessionStorage.getItem("user");
         const response = await fetch(`${apiUrl}/graphql`, {
             method: 'POST',
@@ -11,7 +11,7 @@ const graphModel = {
                 'x-access-token': sessionStorage.getItem("token")
             },
             body: JSON.stringify({ query: `{
-                docs(email: "${email}") { _id, title, body }
+                docs(email: "${email}", code: ${code}) { _id, title, body }
             }`})
         });
         const result = await response.json();

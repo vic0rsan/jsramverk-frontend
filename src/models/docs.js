@@ -23,7 +23,8 @@ const docsModel = {
 
         return result.data;
     },
-    createCurrentDoc: async function createCurrentDoc(value) {
+    createCurrentDoc: async function createCurrentDoc(value, code = false) {
+        console.log(value);
         let titlestr = value.replace( /(<([^>]+)>)/ig, '');
         let title = titlestr.split(' ').slice(0, 5).join(' '); //Get the first five words from the text as the title.
         await fetch(`${apiUrl}/docs/create`, {
@@ -36,6 +37,7 @@ const docsModel = {
             body: JSON.stringify({
                 title: title,
                 body: value,
+                code: code
             })
         });
     },
