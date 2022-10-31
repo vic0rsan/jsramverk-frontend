@@ -1,3 +1,4 @@
+import "setimmediate";
 import React, { useState, useEffect } from "react";
 import docsModel from "../models/docs";
 import graphModel from "../models/graph";
@@ -31,7 +32,7 @@ export default function Docs() {
                 <option value="-99" key="0">*New Document*</option>
                 {docs.map((doc, index) => <option value={doc._id} key={index}>{doc.title}</option>)}
             </select>
-            <TheEditor doc={currentDoc} state={state} toggleCode={<button style={{padding: "1em"}} onClick={() => setState(value => !value)}>🤖 Code</button>}/>
+            <TheEditor doc={currentDoc} state={state} toggleCode={<button style={{padding: "1em"}} id="code" onClick={() => setState(value => !value)}>🤖 Code</button>}/>
         </>
     )
 }

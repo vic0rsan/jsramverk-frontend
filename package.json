@@ -22,9 +22,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "NODE_ENV='local' react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --detectOpenHandles --forceExit",
     "eject": "react-scripts eject",
     "deploy": "npm run build && rsync -av --delete build/ gusu20@ssh.student.bth.se:www/editor"
   },
@@ -45,5 +45,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "canvas": "^2.10.2",
+    "core-js": "^3.26.0",
+    "setimmediate": "^1.0.5"
   }
 }

@@ -1,3 +1,4 @@
+import "setimmediate";
 import React, { useState, useEffect } from "react";
 import { TrixEditor } from "react-trix";
 import { apiUrl } from "../config";
@@ -10,7 +11,7 @@ import "trix";
 import "react-trix-rte";
 import { io } from "socket.io-client";
 
-export default function TheEditor({doc, state, toggleCode}) {
+export default function TheEditor({doc, state, toggleCode, test=false}) {
     const [value, setValue] = useState("");
     const [socket, setSocket] = useState(null);
     const [email, setEmail] = useState(null);
@@ -31,7 +32,12 @@ export default function TheEditor({doc, state, toggleCode}) {
     }
 
     function handlePdf() {
-        textToPdf(value);
+        if (test) {
+            textToPdf(doc.body);
+        } else {
+            textToPdf(value);
+        }
+       
     }
 
     function handleCode(code) {
@@ -51,7 +57,7 @@ export default function TheEditor({doc, state, toggleCode}) {
         })
         .then(function(result) {
             let decodedOutput = atob(result.data);
-            console.log(decodedOutput); // outputs: hej
+            //console.log(decodedOutput); // outputs: hej
             setOutput(decodedOutput);
         });
 
@@ -60,11 +66,11 @@ export default function TheEditor({doc, state, toggleCode}) {
 
     function setEditorContent(content, trigger) {
         let element;
-        if (state) {
+        if (state && !test) {
             element = document.getElementsByClassName("cm-content");
             element[0].innerHTML = "";
             element[0].innerHTML = content;
-        } else {
+        } else if (!test) {
             element = document.querySelector("trix-editor");
             element.value = "";
             element.editor.setSelectedRange([0, 0]);
@@ -78,32 +84,31 @@ export default function TheEditor({doc, state, toggleCode}) {
 
     useEffect(() => {
         setSocket(io(apiUrl));
-        return () => {
             if (socket) {
                 socket.disconnect();
                 console.log("Disconnected");
             }
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [doc]);
 
     useEffect(() => {
         if (socket) {
             socket.emit("create", doc._id);
             console.log("connected");
-            setEditorContent(doc.body)
             socket.on("doc", function(data) {
                 setEditorContent(data.body);
             });
+            setEditorContent(doc.body);
         }
-    }, [socket, doc]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [doc, socket]);
 
     return (
         <>
             <div style={{backgroundColor: "lightblue", padding: "2em"}}>
                 <div style={{textAlign: "center"}}>
-                    <button style={{padding: "1em"}} onClick={handleSave}>💾 Save</button>
-                    <button style={{padding: "1em"}} onClick={handlePdf}>🖨️ Print</button>
+                    <button style={{padding: "1em"}} data-testid="save" onClick={handleSave}>💾 Save</button>
+                    <button style={{padding: "1em"}} data-testid="print" onClick={handlePdf}>🖨️ Print</button>
                     {toggleCode}
                 </div>  
             </div>
@@ -117,7 +122,7 @@ export default function TheEditor({doc, state, toggleCode}) {
                     />
                     <span style={{backgroundColor: "black", color: "lime", display: "flex", height: "10em", margin: "0 auto"}}>{`>${output}`}</span>
                     <br/>
-                    <button onClick={submitCode} style={{padding: "1em", margin: "1em"}}>📨 Send</button>
+                    <button onClick={submitCode} style={{padding: "1em", margin: "1em"}}>📨 Run</button>
                 </div>
                 :
                 <div onKeyUp={() => {socket.emit("doc", {_id: doc._id, body: value})}}>

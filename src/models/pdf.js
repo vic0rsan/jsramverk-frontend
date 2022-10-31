@@ -9,4 +9,7 @@ export default async function textToPdf(html) {
             pdf.save('document.pdf');
         }
     });
+
+    console.log("Text has been converted to a pdf");
+    console.log(html);
 }
