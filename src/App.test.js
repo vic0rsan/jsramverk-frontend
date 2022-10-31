@@ -18,6 +18,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    jest.clearAllMocks();
     unmountComponentAtNode(container);
     document.body.removeChild(container);
     container = null;
@@ -51,10 +52,26 @@ describe('Krav 1: Test print text to pdf from input', () => {
 });
 
 describe('Krav 4: Activate code mode and run js-code', () => {
+    let dom;
     it('Should enter sample code, execute and get a non-empty or invalid response', async () => {
         act(() => {
-            render(<Docs />);
+            dom = render(<Docs />);
         });
-        await Promise.resolve(screen.findByTestId)
+        await Promise.resolve(screen.findByTestId('code'));
+
+        try {
+            let codeBtn = await Promise.resolve(screen.getByTestId('code'));
+
+            await Promise.resolve(fireEvent.click(codeBtn));
+
+            let codeBox = await Promise.resolve(screen.getByTestId('codebox'));
+            let runBtn = await Promise.resolve(screen.getByTestId('run'));
+
+            await Promise.resolve(fireEvent.click(runBtn));
+
+            expect(codeBox).not.toBeNull();        
+        } catch (err) {
+            console.log(err);
+        }
     });
 });

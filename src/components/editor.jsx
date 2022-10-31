@@ -11,7 +11,7 @@ import "trix";
 import "react-trix-rte";
 import { io } from "socket.io-client";
 
-export default function TheEditor({doc, state, toggleCode, test=false}) {
+export default function TheEditor({doc, state, toggleCode, test=false, testcode=null}) {
     const [value, setValue] = useState("");
     const [socket, setSocket] = useState(null);
     const [email, setEmail] = useState(null);
@@ -57,10 +57,8 @@ export default function TheEditor({doc, state, toggleCode, test=false}) {
         })
         .then(function(result) {
             let decodedOutput = atob(result.data);
-            //console.log(decodedOutput); // outputs: hej
             setOutput(decodedOutput);
         });
-
         await docsModel.createCurrentDoc(code, true);
     }
 
@@ -115,14 +113,15 @@ export default function TheEditor({doc, state, toggleCode, test=false}) {
             {state ?
                 <div>
                     <CodeMirror
-                    value={code}
+                    value={testcode || code}
                     height="200px"
                     extensions={[javascript({ jsx: true })]}
                     onChange={handleCode}
+                    data-testid="codebox"
                     />
                     <span style={{backgroundColor: "black", color: "lime", display: "flex", height: "10em", margin: "0 auto"}}>{`>${output}`}</span>
                     <br/>
-                    <button onClick={submitCode} style={{padding: "1em", margin: "1em"}}>📨 Run</button>
+                    <button onClick={() => {submitCode(); console.log(output);}} style={{padding: "1em", margin: "1em"}} data-testid="run">📨 Run</button>
                 </div>
                 :
                 <div onKeyUp={() => {socket.emit("doc", {_id: doc._id, body: value})}}>
