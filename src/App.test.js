@@ -51,9 +51,9 @@ describe('Krav 1: Test print text to pdf from input', () => {
     }); 
 });
 
-describe('Krav 4: Activate code mode and run js-code', () => {
+describe('Krav 4: Activate code mode and elements', () => {
     let dom;
-    it('Should enter sample code, execute and get a non-empty or invalid response', async () => {
+    it('Should activate code mode, "send" button and make sure the code box is present', async () => {
         act(() => {
             dom = render(<Docs />);
         });
